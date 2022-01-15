@@ -5,13 +5,18 @@ template <typename T>
 class List
 {
 public:
+	
 	int GetSize() { return Size; };
 	T& operator [](const int index);
 	List();
 	~List();
-	void push_back(T data);
-	void pop_front();
-	void clear();
+	void push_back(T data);// добавляет элемент в конец списка
+	void pop_front();// удаляет первый элемент в списке
+	void clear();//удаляет все элементы в списке
+	void push_front(T data);// добавляет элемент в начало списка
+	void insert(T value, int index); // добавление выбранному индексу новые данные
+	void removeAt(int index);// удаление элемента по указанному индексу
+	void pop_back();// удаляет последний элемент
 private:
 
 	template <typename T>
@@ -30,6 +35,61 @@ private:
 	int Size;
 	Node <T> *head;
 };
+
+template<typename T>
+void List<T>::push_front(T data)// добавляет элемент в начало списка
+{
+	head = new Node<T>(data,head);
+	Size++;
+}
+
+template<typename T>
+void List<T>::insert(T data, int index) // добавление выбранному индексу новые данные 
+{
+	if (index ==0)
+	{
+		push_front(data);
+	}
+	else
+	{
+		Node <T>* previous = this->head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			previous = previous->pNext;
+		}
+		Node<T>* NewNode = new Node <T>(data, previous->pNext);
+		previous->pNext = NewNode;
+		Size++;
+	}
+	
+}
+
+template<typename T>
+void List<T>::removeAt(int index)// удаление элемента по указанному индексу
+{
+	if (index == 0)
+	{
+		pop_front();
+	}
+	else
+	{
+		Node <T>* previous = this->head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			previous = previous->pNext;
+		}
+		Node<T>* toDelete = previous->pNext;
+		previous->pNext = toDelete->pNext;
+		delete toDelete;
+		Size--;
+	}
+}
+
+template<typename T>
+void List<T>::pop_back()// удаляет последний элемент
+{
+	removeAt(Size - 1);
+}
 
 template<typename T>
 T& List<T>::operator[](const int index)
@@ -56,6 +116,7 @@ List<T>::List()
 template <typename T>
 List<T>::~List()
 {
+	clear();
 }
 
 template<typename T>
@@ -80,7 +141,7 @@ void List<T>::push_back(T data)// добавляет элемент в конец
 }
 
 template<typename T>
-void List<T>::pop_front() // удаляет первый элмент в списке
+void List<T>::pop_front() // удаляет первый элемент в списке
 {
 	Node <T>* temp = head;
 	head = head->pNext;
@@ -91,7 +152,7 @@ void List<T>::pop_front() // удаляет первый элмент в списке
 }
 
 template<typename T>
-void List<T>::clear()
+void List<T>::clear() //удаляет все элементы в списке
 {
 	while (Size)
 	{
@@ -114,6 +175,8 @@ int main()
 	lst.push_back(5);
 	lst.push_back(10);
 	lst.push_back(800);
+	cout << lst[2] << endl;
+	lst.insert(99, 2);
 	cout << lst[2] << endl;
 	system("pause");
 	return 0;
